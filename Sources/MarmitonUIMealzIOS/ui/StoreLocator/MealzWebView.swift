@@ -6,17 +6,20 @@
 //
 
 import Foundation
+import UIKit
+import WebKit
+import SwiftUI
 
-
-class MealzWebView: UIViewController {
+@available(iOS 15.0, *)
+public class MealzWebView: UIViewController {
     var webView: WKWebView
     var contentController = WKUserContentController()
     
     var urlToLoad: URL
     
-    var onSelectItem: (Any?) -> Void
+    var onSelectItem: (String?) -> Void
     
-    init(url: URL, onSelectItem: @escaping (Any?) -> Void) {
+    public init(url: URL, onSelectItem: @escaping (Any?) -> Void) {
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
@@ -25,8 +28,7 @@ class MealzWebView: UIViewController {
         urlToLoad = url
         self.onSelectItem = onSelectItem
         super.init(nibName: nil, bundle: nil)
-        contentController.add(self, name: "mealz")
-        webView.isInspectable = true
+        contentController.add(self, name: "Mealz")
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.configuration.preferences.javaScriptEnabled = true
     }
@@ -35,7 +37,7 @@ class MealzWebView: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(webView)
@@ -51,13 +53,15 @@ class MealzWebView: UIViewController {
         webView.loadFileRequest(htmlURLRequest, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
     }
 }
-
+@available(iOS 15.0, *)
 extension MealzWebView: WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        self.onSelectItem(message.body)
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        var storeId = (( (message.body as? [String:String]) ?? [:] )["posId"] ?? "0")
+        self.onSelectItem(storeId )
+        self.dismiss(animated: true)
     }
 }
-
+@available(iOS 15.0, *)
 struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
     typealias UIViewControllerType = MealzWebView
     
@@ -68,7 +72,6 @@ struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
     init(urlToLoad : URL, onSelectItem: @escaping (Any?) -> Void) throws {
         self.urlToLoad = urlToLoad
         self.onSelectItem = onSelectItem
-        
         mealzView = MealzWebView(url: urlToLoad, onSelectItem: onSelectItem)
     }
     
