@@ -16,15 +16,22 @@
       const storeLocatorElement = document.querySelector('mealz-store-locator');
       storeLocatorElement.addEventListener('posIdChange', (e) => {
         console.log('POS selected!', e.detail.posId);
-
-        window.webkit.messageHandlers.Mealz.postMessage(e.detail);
+        var jsonObject = {
+            message: "posIdChange",
+            value:  e.detail.posId
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
 
       storeLocatorElement.addEventListener('showChange', (e) => {
         console.log('showChange', e.detail.show);
+        
+        var jsonObject = {
+            message: "showChange",
+            value:  e.detail.show
+        };
 
-        postMessage('storeLocator.showChange', e.detail.show);
-        // Kotlin app receives message and closes the webview
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
 
       storeLocatorElement.getByAddress = function(address, radius) {

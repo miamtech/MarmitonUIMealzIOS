@@ -56,9 +56,31 @@ public class MealzWebView: UIViewController {
 @available(iOS 15.0, *)
 extension MealzWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        var storeId = (( (message.body as? [String:String]) ?? [:] )["posId"] ?? "0")
-        self.onSelectItem(storeId )
-        self.dismiss(animated: true)
+        guard let body = message.body as? String, let data = body.data(using: .utf8) else { return }
+        do {
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                if let message = json["message"] as? String, let value = json["value"] as? String {
+                    
+                    switch(message) {
+                    case "posIdChange":
+                        self.onSelectItem(value)
+                        self.dismiss(animated: true)
+                    default:
+                        break;
+                    }
+                    print("Message:", message)
+                    print("Value:", value)
+                }
+            }
+        }catch {
+            print("Erreur lors de la désérialisation JSON:", error)
+
+        }
+        
+        
+        
+       
+       
     }
 }
 @available(iOS 15.0, *)
