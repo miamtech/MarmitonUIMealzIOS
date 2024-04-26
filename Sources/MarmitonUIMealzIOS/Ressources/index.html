@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MY WEBVIEW</title>
+  <title>Store Selector</title>
 
   <!-- LOAD STORE LOCATOR SCRIPT HERE -->
   <script type="module" src="https://unpkg.com/mealz-components/dist/store-locator/store-locator.min.js"></script>
@@ -15,7 +15,6 @@
 <script>
       const storeLocatorElement = document.querySelector('mealz-store-locator');
       storeLocatorElement.addEventListener('posIdChange', (e) => {
-        console.log('POS selected!', e.detail.posId);
         var jsonObject = {
             message: "posIdChange",
             value:  e.detail.posId
@@ -24,13 +23,10 @@
       })
 
       storeLocatorElement.addEventListener('showChange', (e) => {
-        console.log('showChange', e.detail.show);
-        
         var jsonObject = {
             message: "showChange",
             value:  e.detail.show
         };
-
         window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
 
@@ -44,7 +40,6 @@
             console.debug('[Mealz components] Request getByAddress()');
             getByAddressRequest.onload = () => {
               const resp = JSON.parse(getByAddressRequest.response);
-              console.debug('[Mealz components] Response received', resp);
               callback(resp);
             }
             getByAddressRequest.send();

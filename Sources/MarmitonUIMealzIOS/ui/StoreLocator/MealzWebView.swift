@@ -49,7 +49,6 @@ public class MealzWebView: UIViewController {
                 ])
         var htmlURLRequest = URLRequest(url: urlToLoad)
         htmlURLRequest.setValue("app://testWebview", forHTTPHeaderField: "Access-Control-Allow-Origin")
-        
         webView.loadFileRequest(htmlURLRequest, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
     }
 }
@@ -60,7 +59,6 @@ extension MealzWebView: WKScriptMessageHandler {
         do {
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 if let message = json["message"] as? String, let value = json["value"] as? String {
-                    
                     switch(message) {
                     case "posIdChange":
                         self.onSelectItem(value)
@@ -68,19 +66,12 @@ extension MealzWebView: WKScriptMessageHandler {
                     default:
                         break;
                     }
-                    print("Message:", message)
-                    print("Value:", value)
                 }
             }
         }catch {
             print("Erreur lors de la désérialisation JSON:", error)
 
         }
-        
-        
-        
-       
-       
     }
 }
 @available(iOS 15.0, *)
