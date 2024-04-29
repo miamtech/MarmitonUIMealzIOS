@@ -10,7 +10,6 @@ import UIKit
 import WebKit
 import SwiftUI
 
-@available(iOS 15.0, *)
 public class MealzWebView: UIViewController {
     var webView: WKWebView
     var contentController = WKUserContentController()
@@ -49,7 +48,7 @@ public class MealzWebView: UIViewController {
                 ])
         var htmlURLRequest = URLRequest(url: urlToLoad)
         htmlURLRequest.setValue("app://testWebview", forHTTPHeaderField: "Access-Control-Allow-Origin")
-        webView.loadFileRequest(htmlURLRequest, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
+        webView.loadFileURL(htmlURLRequest.url!, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
     }
 }
 @available(iOS 15.0, *)
