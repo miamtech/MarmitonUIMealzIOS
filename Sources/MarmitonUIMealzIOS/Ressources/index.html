@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store Selector</title>
+
+  <!-- LOAD STORE LOCATOR SCRIPT HERE -->
+  <script type="module" src="https://unpkg.com/mealz-components/dist/store-locator/store-locator.min.js"></script>
+</head>
+<body>
+<!-- Will show store locator on page load -->
+<mealz-store-locator show></mealz-store-locator>
+<script>
+      const storeLocatorElement = document.querySelector('mealz-store-locator');
+      storeLocatorElement.addEventListener('posIdChange', (e) => {
+        var jsonObject = {
+            message: "posIdChange",
+            value:  e.detail.posId
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+      })
+
+      storeLocatorElement.addEventListener('showChange', (e) => {
+        var jsonObject = {
+            message: "showChange",
+            value:  e.detail.show
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+      })
+
+      storeLocatorElement.getByAddress = function(address, radius) {
+        const getByAddressRequest = new XMLHttpRequest();
+        const url = `https://api-uat.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&include=supplier`;
+        getByAddressRequest.open('GET', url);
+
+        return {
+          subscribe: function(callback) {
+            console.debug('[Mealz components] Request getByAddress()');
+            getByAddressRequest.onload = () => {
+              const resp = JSON.parse(getByAddressRequest.response);
+              callback(resp);
+            }
+            getByAddressRequest.send();
+          }
+        };
+      };
+    </script>
+</body>
+</html>

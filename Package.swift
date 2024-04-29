@@ -4,7 +4,7 @@
 import PackageDescription
 import Foundation
 
-let configurationMode = ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
+let configurationMode = "dev" //ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
 
 let package = Package(
     name: "MarmitonUIMealzIOS",
@@ -79,7 +79,7 @@ let package = Package(
             }
             return dependencies
         }(),
-        resources: [.process("Resources"), .copy("PrivacyInfo.xcprivacy")]
+            resources: [.copy("Ressources"), .copy("PrivacyInfo.xcprivacy")]
         )
     ]
 )
