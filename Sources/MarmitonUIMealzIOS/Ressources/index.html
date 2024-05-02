@@ -15,11 +15,11 @@
 <script>
       const storeLocatorElement = document.querySelector('mealz-store-locator');
       storeLocatorElement.addEventListener('posIdChange', (e) => {
-        var jsonObject = {
-            message: "posIdChange",
-            value:  e.detail.posId
-        };
-        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+          var jsonObject = {
+              message: "posIdChange",
+              value:  { "posId": e.detail.posId, "extId" : e.detail.posExtId, "supplierId": e.detail.supplierId }
+          };
+          window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
 
       storeLocatorElement.addEventListener('showChange', (e) => {
