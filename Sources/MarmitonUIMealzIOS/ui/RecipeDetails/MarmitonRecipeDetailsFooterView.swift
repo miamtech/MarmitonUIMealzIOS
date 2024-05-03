@@ -6,9 +6,9 @@
 //
 
 import SwiftUI
-import MealzIOSFramework
+import MealziOSSDK
 import mealzcore
-import MealzUIModuleIOS
+import MealzUIiOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {

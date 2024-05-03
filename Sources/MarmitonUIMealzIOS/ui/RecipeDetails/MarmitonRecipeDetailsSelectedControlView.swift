@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import MealzIOSFramework
+import MealziOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonRecipeDetailsSelectedControlView: RecipeDetailsSelectedControlProtocol {
