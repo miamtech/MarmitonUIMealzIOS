@@ -57,11 +57,13 @@ extension MealzWebView: WKScriptMessageHandler {
         guard let body = message.body as? String, let data = body.data(using: .utf8) else { return }
         do {
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                if let message = json["message"] as? String, let value = json["value"] as? String {
+                if let message = json["message"] as? String {
                     switch(message) {
                     case "posIdChange":
-                        self.onSelectItem(value)
-                        self.dismiss(animated: true)
+                        if let posId = json["posId"] as? String {
+                            self.onSelectItem(posId)
+                            self.dismiss(animated: true)
+                        }
                     default:
                         break;
                     }
