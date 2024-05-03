@@ -23,26 +23,26 @@ let package = Package(
         
         if configurationMode == "dev" {
             dependencies.append(contentsOf: [
-                .package(path: "../MealzUIModuleIOS"),
-                .package(path: "../MealzNavModuleIOS"),
+                .package(path: "../MealzUIiOSSDK"),
+                .package(path: "../MealzNaviOSSDK"),
                 .package(path: "../MealzCore"),
-                .package(path: "../MealzIOSFramework")
+                .package(path: "../MealziOSSDK")
             ]
             )
         } else if configurationMode == "devWithSPM" {
             dependencies.append(contentsOf: [
-                .package(path: "../MealzUIModuleIOS"),
-                .package(path: "../MealzNavModuleIOS"),
-                .package(path: "../MealzCore"),
-                .package(path: "../MealzIOSFrameworkSPM")
+                .package(path: "../MealzUIiOSSDKRelease"),
+                .package(path: "../MealzNaviOSSDKRelease"),
+                .package(path: "../MealzCoreRelease"),
+                .package(path: "../MealziOSSDKRelease")
             ]
             )
         } else {
             dependencies.append(contentsOf: [
-                .package(url: "https://github.com/miamtech/releaseMealz", from: "1.0.0-beta3"),
-                .package(url: "https://github.com/miamtech/MealzIOSFrameworkSPM", exact: "1.0.0-beta4"),
-                .package(url: "https://github.com/miamtech/MealzUIModuleIOS", from: "1.0.2-beta3"),
-                .package(url: "https://github.com/miamtech/MealzNavModuleIOS", from: "1.0.2-beta2")
+                .package(url: "https://github.com/miamtech/MealzCoreRelease", from: "4.1.0-alpha"),
+                .package(url: "https://github.com/miamtech/MealziOSSDKRelease", exact: "4.1.0-alpha"),
+                .package(url: "https://github.com/miamtech/MealzUIiOSSDKRelease", from: "1.1.0-alpha"),
+                .package(url: "https://github.com/miamtech/MealzNaviOSSDKRelease", from: "1.1.0-alpha")
             ]
             )
         }
@@ -54,26 +54,21 @@ let package = Package(
         .target(
             name: "MarmitonUIMealzIOS",
         dependencies: {
-            var dependencies: [Target.Dependency] = [
-                .product(name: "MealzUIModuleIOS", package: "MealzUIModuleIOS"),
-                .product(name: "MealzNavModuleIOS", package: "MealzNavModuleIOS")
-            ]
+            var dependencies: [Target.Dependency] = []
             if configurationMode == "dev" {
                 dependencies.append(contentsOf: [
+                    .product(name: "MealzUIiOSSDK", package: "MealzUIiOSSDK"),
+                    .product(name: "MealzNaviOSSDK", package: "MealzNaviOSSDK"),
                     .product(name: "MealzCore", package: "MealzCore"),
-                    .product(name: "MealzIOSFramework", package: "MealzIOSFramework")
-                ]
-                )
-            } else if configurationMode == "devWithSPM" {
-                dependencies.append(contentsOf: [
-                    .product(name: "MealzCore", package: "MealzCore"),
-                    .product(name: "MealzIOSFrameworkSPM", package: "MealzIOSFrameworkSPM")
+                    .product(name: "MealziOSSDK", package: "MealziOSSDK")
                 ]
                 )
             } else {
                 dependencies.append(contentsOf: [
-                    .product(name: "MealzCore", package: "releaseMealz"),
-                    .product(name: "MealzIOSFrameworkSPM", package: "MealzIOSFrameworkSPM")
+                    .product(name: "MealzUIiOSSDK", package: "MealzUIiOSSDKRelease"),
+                    .product(name: "MealzNaviOSSDK", package: "MealzNaviOSSDKRelease"),
+                    .product(name: "MealzCore", package: "MealzCoreRelease"),
+                    .product(name: "MealziOSSDKRelease", package: "MealziOSSDKRelease")
                 ]
                 )
             }
