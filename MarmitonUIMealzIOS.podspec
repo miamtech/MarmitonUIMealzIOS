@@ -9,6 +9,7 @@ Pod::Spec.new do |spec|
     spec.homepage     = 'https://www.miam.tech'
     spec.license      = "GPLv3"
     spec.author             = { "Diarmuid McGonagle" => "it@miam.tech" }
+    spec.source       = { :git => "https://github.com/miamtech/MarmitonUIMealzIOS.git", :tag => "#{spec.version}" }
     spec.platform     = :ios, "12.0"
     spec.swift_version = '5.8'
     spec.dependency 'MealzCoreRelease', '~> 4.1.0-alpha'
