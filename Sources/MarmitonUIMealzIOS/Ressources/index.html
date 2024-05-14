@@ -34,7 +34,7 @@
 
       storeLocatorElement.getByAddress = function(address, radius) {
         const getByAddressRequest = new XMLHttpRequest();
-        const url = `https://api-uat.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&include=supplier`;
+        const url = `https://api-uat.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&filter[affiliate]=true&include=supplier`;
         getByAddressRequest.open('GET', url);
 
         return {
