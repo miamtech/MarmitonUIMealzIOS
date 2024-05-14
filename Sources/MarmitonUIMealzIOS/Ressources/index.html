@@ -8,6 +8,7 @@
 
   <!-- LOAD STORE LOCATOR SCRIPT HERE -->
   <script type="module" src="https://unpkg.com/mealz-components/dist/store-locator/store-locator.min.js"></script>
+  <!--  <script type="module" src="store-locator.min.js"></script>--> <!--// for testing locally-->
 </head>
 <body>
 <!-- Will show store locator on page load -->
@@ -19,7 +20,8 @@
              message: "posIdChange",
              posId : e.detail.posId,
              posExtId : e.detail.posExtId,
-             supplierId : e.detail.supplierId
+             supplierId : e.detail.supplierId,
+             posName: e.detail.posName
          };
           window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
@@ -34,6 +36,7 @@
 
       storeLocatorElement.getByAddress = function(address, radius) {
         const getByAddressRequest = new XMLHttpRequest();
+        // TODO -> update to api.miam.tech
         const url = `https://api-uat.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&filter[affiliate]=true&include=supplier`;
         getByAddressRequest.open('GET', url);
 
