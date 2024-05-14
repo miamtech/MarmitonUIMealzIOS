@@ -52,7 +52,7 @@ public class MealzStoreLocatorWebView: UIViewController {
             webView.loadFileURL(url, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
         }
         // send PageView Analytics event
-        MealzDI.shared.analyticsService.sendEvent(eventType: Analytics.companion.EVENT_PAGEVIEW, path: "/locator-navigate", props: Analytics.setProps())
+        MealzDI.shared.analyticsService.sendEvent(eventType: Analytics.companion.EVENT_PAGEVIEW, path: "/locator", props: Analytics.setProps())
     }
 }
 @available(iOS 15.0, *)
