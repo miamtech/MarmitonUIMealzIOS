@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import MealzIOSFramework
+import MealziOSSDK
 
 @available(iOS 14, *)
 public func configDimensions() {

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import MealzIOSFramework
+import MealziOSSDK
 
 @available (iOS 14, *)
 public struct MarmitonCounter<Content: View>: View {
@@ -21,7 +21,7 @@ public struct MarmitonCounter<Content: View>: View {
         currentAmount: Int,
         backgroundColor: Color = Color.clear,
          buttonStrokeColor: Color = Color.clear,
-         cornerRadius: CGFloat = Dimension.sharedInstance.buttonCornerRadius,
+         cornerRadius: CGFloat = Dimension.sharedInstance.mCornerRadius,
          content: @escaping () -> Content,
          buttonAction: @escaping (Int) -> Void
     ) {
