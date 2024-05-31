@@ -52,7 +52,11 @@ public class MealzStoreLocatorWebView: UIViewController {
             webView.loadFileURL(url, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
         }
         // send PageView Analytics event
-        MealzDI.shared.analyticsService.sendEvent(eventType: Analytics.companion.EVENT_PAGEVIEW, path: "/locator", props: Analytics.setProps())
+        MealzDI.shared.analyticsService.sendEvent(
+            eventType: AnalyticsCompanion.shared.EVENT_PAGEVIEW,
+            path: "/locator",
+            props: AnalyticsCompanion.setProps()
+        )
     }
 }
 @available(iOS 15.0, *)
@@ -65,16 +69,17 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                     switch(message) {
                     case "posIdChange":
                         if let posId = json["posId"] as? String {
-                            self.onSelectItem(posId)
-                            // send pos.selected Analytics event
-                            if let posName = json["posName"] as? String {
-                                MealzDI.shared.analyticsService.sendEvent(
-                                    eventType: Analytics.companion.EVENT_POS_SELECTED,
-                                    path: "",
-                                    props: Analytics.setProps(posId: posId, posName: posName)
-                                )
+                            Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
+                                // send pos.selected Analytics event
+                                if let posName = json["posName"] as? String {
+                                    MealzDI.shared.analyticsService.sendEvent(
+                                        eventType: AnalyticsCompanion.shared.EVENT_POS_SELECTED,
+                                        path: "",
+                                        props: AnalyticsCompanion.setProps(posId: posId, posName: posName)
+                                    )
+                                }
+                                self.dismiss(animated: true)
                             }
-                            self.dismiss(animated: true)
                         }
                     default:
                         break;
