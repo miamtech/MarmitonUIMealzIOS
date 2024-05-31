@@ -30,7 +30,10 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
             callToAction: {
                 // only launch event when all products have been added or ignored
                 if params.ingredientsStatus.type == IngredientStatusTypes.noMoreToAdd {
-                    MealzDI.shared.analyticsService.sendEvent(eventType: Analytics.companion.EVENT_BASKET_PREVIEW, path: "", props: Analytics.setProps())
+                    MealzDI.shared.analyticsService.sendEvent(
+                        eventType: AnalyticsCompanion.shared.EVENT_BASKET_PREVIEW,
+                        path: "",
+                        props: AnalyticsCompanion.setProps())
                 }
                 params.callToAction()
             })
