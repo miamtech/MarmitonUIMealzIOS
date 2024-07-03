@@ -3,3 +3,4 @@ Initial Release
 [FEA] Add Localization files in French & English
 [FEA] Create Custom Recipe Details Footer View
 [FEA] Create Item Selector Views
+[FEA] Create Custom Added Product & Not In Product Views
