@@ -74,7 +74,7 @@ let package = Package(
             }
             return dependencies
         }(),
-            resources: [.copy("Ressources"), .copy("PrivacyInfo.xcprivacy")]
+            resources: [.copy("Ressources"), .process("Localization"), .copy("PrivacyInfo.xcprivacy")]
         )
     ]
 )

@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Diarmuid McGonagle on 02/07/2024.
+  
+*/
+
+"com_miam_details_continue_shopping" = "See my basket";
+"com_miam_item_selector_header_title_add_product" = "Find a product by searching";
