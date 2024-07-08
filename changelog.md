@@ -4,3 +4,4 @@ Initial Release
 [FEA] Create Custom Recipe Details Footer View
 [FEA] Create Item Selector Views
 [FEA] Create Custom Added Product & Not In Product Views
+[FEA] Create Custom Product in MyProducts View
