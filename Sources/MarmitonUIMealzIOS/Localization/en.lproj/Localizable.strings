@@ -8,4 +8,5 @@
 
 "mealz_see_my_basket" = "See my basket";
 "com_miam_item_selector_header_title_add_product" = "Find a product by searching";
+"com_miam_item_selector_in_basket" = "Already selected";
 "com_miam_item_selector_no_substitution" = "We have not found any products to replace this item, launch another search to choose a different product.";
