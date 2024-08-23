@@ -81,6 +81,11 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                                 self.dismiss(animated: true)
                             }
                         }
+                    case "showChange":
+                        if (!(json["value"] as? Bool ?? false)) {
+                            self.dismiss(animated: true)
+                            break;
+                        }
                     default:
                         break;
                     }
