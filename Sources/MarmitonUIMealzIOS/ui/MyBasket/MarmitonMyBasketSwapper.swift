@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MealziOSSDK
-import MealzUIiOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonMyBasketSwapper: MyBasketSwapperProtocol {
