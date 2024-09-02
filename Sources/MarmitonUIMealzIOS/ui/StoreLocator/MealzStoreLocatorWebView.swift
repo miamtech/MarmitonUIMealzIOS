@@ -88,7 +88,12 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                         }
                     case "showChange":
                         if !(json["value"] as? Bool ?? false) {
-                            dismiss(animated: true)
+                            if let vc = presentingViewController {
+                                dismiss(animated: true)
+                                vc.dismiss(animated: true)
+                            } else {
+                                dismiss(animated: true)
+                            }
                             break
                         }
                     default:
