@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import UIKit
-import WebKit
-import SwiftUI
 import mealzcore
 import MealziOSSDK
+import SwiftUI
+import UIKit
+import WebKit
 
 public class MealzStoreLocatorWebView: UIViewController {
     var webView: WKWebView
@@ -32,11 +32,12 @@ public class MealzStoreLocatorWebView: UIViewController {
         webView.configuration.preferences.javaScriptEnabled = true
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(webView)
@@ -59,6 +60,7 @@ public class MealzStoreLocatorWebView: UIViewController {
         )
     }
 }
+
 @available(iOS 15.0, *)
 extension MealzStoreLocatorWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -66,7 +68,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
         do {
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 if let message = json["message"] as? String {
-                    switch(message) {
+                    switch message {
                     case "posIdChange":
                         if let posId = json["posId"] as? String {
                             Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
@@ -78,16 +80,24 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                                         props: AnalyticsCompanion.setProps(posId: posId, posName: posName)
                                     )
                                 }
+                                if let retailerId = json["supplierId"] as? String, let retailerName = json["supplierName"] as? String {
+                                    Mealz.shared.user.setRetailer(retailerId: retailerId, retailerName: retailerName)
+                                }
                                 self.dismiss(animated: true)
                             }
                         }
                     case "showChange":
-                        if (!(json["value"] as? Bool ?? false)) {
-                            self.dismiss(animated: true)
-                            break;
+                        if !(json["value"] as? Bool ?? false) {
+                            if let vc = presentingViewController {
+                                dismiss(animated: true)
+                                vc.dismiss(animated: true)
+                            } else {
+                                dismiss(animated: true)
+                            }
+                            break
                         }
                     default:
-                        break;
+                        break
                     }
                 }
             }
@@ -96,6 +106,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
         }
     }
 }
+
 @available(iOS 15.0, *)
 struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
     typealias UIViewControllerType = MealzStoreLocatorWebView
@@ -104,7 +115,7 @@ struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
     var onSelectItem: (Any?) -> Void
     
     let mealzView: MealzStoreLocatorWebView
-    init(urlToLoad : URL, onSelectItem: @escaping (Any?) -> Void) throws {
+    init(urlToLoad: URL, onSelectItem: @escaping (Any?) -> Void) throws {
         self.urlToLoad = urlToLoad
         self.onSelectItem = onSelectItem
         mealzView = MealzStoreLocatorWebView(url: urlToLoad, onSelectItem: onSelectItem)
@@ -114,7 +125,5 @@ struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
         return mealzView
     }
     
-    func updateUIViewController(_ uiViewController: MealzStoreLocatorWebView, context: Context) {
-        
-    }
+    func updateUIViewController(_ uiViewController: MealzStoreLocatorWebView, context: Context) {}
 }

@@ -5,9 +5,9 @@
 //  Created by Diarmuid McGonagle on 03/07/2024.
 //
 
-import SwiftUI
-import MealziOSSDK
 import mealzcore
+import MealziOSSDK
+import SwiftUI
 
 public let mealzProductHeight: CGFloat = 230
 
@@ -24,12 +24,13 @@ public struct MarmitonRecipeDetailsAddedProductView: RecipeDetailsAddedProductPr
                 isInBasket: true)
             HStack {
                 MealzProductBase.productImage(pictureURL: params.data.pictureURL)
+                
                 MealzProductBase.productTitleDescriptionWeightReplace(
                     brand: params.data.brand,
                     name: params.data.name,
                     capacity: params.data.capacity,
                     isSponsored: params.data.isSponsored,
-                    onChooseProduct: params.onChangeProduct)
+                    pricePerUnitOfMeasurement: params.pricePerUnitOfMeasurement, productUnit: params.productUnit, onChooseProduct: params.onChangeProduct)
             }
             HStack(spacing: Dimension.sharedInstance.lPadding) {
                 MealzProductBase.productPrice(formattedProductPrice: params.data.formattedProductPrice)
@@ -47,8 +48,7 @@ public struct MarmitonRecipeDetailsAddedProductView: RecipeDetailsAddedProductPr
         .frame(height: mealzProductHeight)
         .overlay( /// apply a rounded border
             RoundedRectangle(cornerRadius: dim.mCornerRadius)
-                .stroke(Color.mealzColor(.primary), lineWidth: 1)
-        )
+                .stroke(Color.mealzColor(.primary), lineWidth: 1))
         .padding(.horizontal, dim.mPadding)
     }
     
@@ -112,7 +112,7 @@ public struct MarmitonRecipeDetailsAddedProductView: RecipeDetailsAddedProductPr
             .overlay(
                 RoundedRectangle(cornerRadius: 4)
                     .stroke(Color.mealzColor(.lightGray), lineWidth: 1)
-                )
+            )
             .padding(.vertical, Dimension.sharedInstance.mPadding)
         }
     }

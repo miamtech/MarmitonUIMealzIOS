@@ -21,6 +21,7 @@
              posId : e.detail.posId,
              posExtId : e.detail.posExtId,
              supplierId : e.detail.supplierId,
+             supplierName : e.detail.supplierName,
              posName: e.detail.posName
          };
           window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
@@ -34,10 +35,12 @@
         window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
 
-      storeLocatorElement.getByAddress = function(address, radius) {
+      function getByAddress(address, radius, selectedSuppliers) {
         const getByAddressRequest = new XMLHttpRequest();
-        // TODO -> update to api.miam.tech
-        const url = `https://api.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&include=supplier&filter[affiliate]=true`;
+        let url = `https://api.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&include=supplier&filter[affiliate]=true`;
+        if (selectedSuppliers.length > 0) {
+          url += `&filter[supplier]=${selectedSuppliers.join(',')}`
+        }
         getByAddressRequest.open('GET', url);
 
         return {
@@ -45,12 +48,40 @@
             console.debug('[Mealz components] Request getByAddress()');
             getByAddressRequest.onload = () => {
               const resp = JSON.parse(getByAddressRequest.response);
+              console.debug('[Mealz components] getByAddress response received', resp);
               callback(resp);
             }
             getByAddressRequest.send();
           }
         };
-      };
+      }
+
+      function getAffiliateSuppliers() {
+        const getAffiliateSuppliersRequest = new XMLHttpRequest();
+        const url = `https://api.miam.tech/api/v1/suppliers?filter[affiliate]=true`;
+        getAffiliateSuppliersRequest.open('GET', url);
+
+        return {
+          subscribe: function(callback) {
+            console.debug('[Mealz components] Request getAffiliateSuppliers()');
+            getAffiliateSuppliersRequest.onload = () => {
+              const resp = JSON.parse(getAffiliateSuppliersRequest.response);
+              console.debug('[Mealz components] getAffiliateSuppliers response received', resp.data);
+              callback(resp.data);
+            }
+            getAffiliateSuppliersRequest.send();
+          }
+        };
+      }
+
+      window.miam = {
+        pos: {
+          getByAddress: getByAddress
+        },
+        supplier: {
+          getAffiliateSuppliers: getAffiliateSuppliers
+        }
+      }
     </script>
 </body>
 </html>
