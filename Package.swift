@@ -4,7 +4,7 @@
 import PackageDescription
 import Foundation
 
-let configurationMode = "dev" //ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
+let configurationMode = "prod" //ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
 
 let package = Package(
     name: "MarmitonUIMealzIOS",
@@ -39,10 +39,10 @@ let package = Package(
             )
         } else {
             dependencies.append(contentsOf: [
-                .package(url: "https://github.com/miamtech/MealzCoreRelease", from: "4.1.0-alpha"),
-                .package(url: "https://github.com/miamtech/MealziOSSDKRelease", exact: "4.1.0-alpha"),
-                .package(url: "https://github.com/miamtech/MealzUIiOSSDKRelease", from: "1.1.0-alpha"),
-                .package(url: "https://github.com/miamtech/MealzNaviOSSDKRelease", from: "1.1.0-alpha4")
+                .package(url: "https://github.com/miamtech/MealzCoreRelease", from: "4.1.0"),
+                .package(url: "https://github.com/miamtech/MealziOSSDKRelease", exact: "4.1.0"),
+                .package(url: "https://github.com/miamtech/MealzUIiOSSDKRelease", from: "4.1.0"),
+                .package(url: "https://github.com/miamtech/MealzNaviOSSDKRelease", from: "4.1.0")
             ]
             )
         }
