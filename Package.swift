@@ -4,7 +4,7 @@
 import PackageDescription
 import Foundation
 
-let configurationMode = "dev" //ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
+let configurationMode = "prod" //ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
 
 let package = Package(
     name: "MarmitonUIMealzIOS",
