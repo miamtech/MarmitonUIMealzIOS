@@ -7,7 +7,6 @@
 
 import mealzcore
 import MealziOSSDK
-import MealzUIiOSSDK
 import SwiftUI
 
 public let mealzProductHeight: CGFloat = 230
@@ -86,7 +85,7 @@ public struct MarmitonRecipeDetailsAddedProductView: RecipeDetailsAddedProductPr
                     .foregroundColor(Color.mealzColor(.lightGray))
                 Group {
                     if isLocked {
-                        MealzUIiOSSDK.ProgressLoader(color: Color.mealzColor(.standardDarkText), size: 10)
+                        ProgressLoader(color: Color.mealzColor(.standardDarkText), size: 10)
                             .foregroundColor(Color.mealzColor(.primary))
                     } else {
                         Text(String(productQuantity)).frame(alignment: .center)
