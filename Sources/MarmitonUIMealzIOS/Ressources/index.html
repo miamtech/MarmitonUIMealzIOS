@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Store Selector</title>
+
+  <!-- LOAD STORE LOCATOR SCRIPT HERE -->
+  <script type="module" src="https://unpkg.com/mealz-components/dist/store-locator/store-locator.min.js"></script>
+  <!--  <script type="module" src="store-locator.min.js"></script>--> <!--// for testing locally-->
+</head>
+<body>
+<!-- Will show store locator on page load -->
+<mealz-store-locator show></mealz-store-locator>
+<script>
+      const storeLocatorElement = document.querySelector('mealz-store-locator');
+      storeLocatorElement.addEventListener('posIdChange', (e) => {
+          var jsonObject = {
+             message: "posIdChange",
+             posId : e.detail.posId,
+             posExtId : e.detail.posExtId,
+             supplierId : e.detail.supplierId,
+             supplierName : e.detail.supplierName,
+             posName: e.detail.posName
+         };
+          window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+      })
+
+      storeLocatorElement.addEventListener('showChange', (e) => {
+        var jsonObject = {
+            message: "showChange",
+            value:  e.detail.show
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+      })
+
+      function getByAddress(address, radius, selectedSuppliers) {
+        const getByAddressRequest = new XMLHttpRequest();
+        let url = `https://api.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&include=supplier&filter[affiliate]=true`;
+        if (selectedSuppliers.length > 0) {
+          url += `&filter[supplier]=${selectedSuppliers.join(',')}`
+        }
+        getByAddressRequest.open('GET', url);
+
+        return {
+          subscribe: function(callback) {
+            console.debug('[Mealz components] Request getByAddress()');
+            getByAddressRequest.onload = () => {
+              const resp = JSON.parse(getByAddressRequest.response);
+              console.debug('[Mealz components] getByAddress response received', resp);
+              callback(resp);
+            }
+            getByAddressRequest.send();
+          }
+        };
+      }
+
+      function getAffiliateSuppliers() {
+        const getAffiliateSuppliersRequest = new XMLHttpRequest();
+        const url = `https://api.miam.tech/api/v1/suppliers?filter[affiliate]=true`;
+        getAffiliateSuppliersRequest.open('GET', url);
+
+        return {
+          subscribe: function(callback) {
+            console.debug('[Mealz components] Request getAffiliateSuppliers()');
+            getAffiliateSuppliersRequest.onload = () => {
+              const resp = JSON.parse(getAffiliateSuppliersRequest.response);
+              console.debug('[Mealz components] getAffiliateSuppliers response received', resp.data);
+              callback(resp.data);
+            }
+            getAffiliateSuppliersRequest.send();
+          }
+        };
+      }
+
+      window.miam = {
+        pos: {
+          getByAddress: getByAddress
+        },
+        supplier: {
+          getAffiliateSuppliers: getAffiliateSuppliers
+        }
+      }
+    </script>
+</body>
+</html>

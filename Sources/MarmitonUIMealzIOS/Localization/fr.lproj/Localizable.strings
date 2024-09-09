@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Diarmuid McGonagle on 02/07/2024.
+  
+*/
+
+"mealz_see_my_basket" = "Voir mon panier";
+"com_miam_item_selector_header_title_add_product" = "Trouver une liste de produit en effectuant votre recherche";
+"com_miam_item_selector_in_basket" = "Déjà sélectionné";
+"com_miam_item_selector_no_substitution" = "Nous n'avons trouvé aucun produit pouvant remplacer celui-ci, effectuez une recherche pour en choisir un autre.";
+"com_miam_my_meals_no_meal_in_basket" = "Vous n'avez ajouté aucun repas pour le moment";
