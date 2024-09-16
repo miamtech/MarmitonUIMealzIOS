@@ -65,10 +65,10 @@ let package = Package(
                 )
             } else {
                 dependencies.append(contentsOf: [
-                    .product(name: "MealzUIiOSSDKRelease", package: "MealzUIiOSSDKRelease"),
-                    .product(name: "MealzNaviOSSDKRelease", package: "MealzNaviOSSDKRelease"),
+                    .product(name: "MealzUIiOSSDK", package: "MealzUIiOSSDKRelease"),
+                    .product(name: "MealzNaviOSSDK", package: "MealzNaviOSSDKRelease"),
                     .product(name: "MealzCore", package: "MealzCoreRelease"),
-                    .product(name: "MealziOSSDKRelease", package: "MealziOSSDKRelease")
+                    .product(name: "MealziOSSDK", package: "MealziOSSDKRelease")
                 ]
                 )
             }
