@@ -9,3 +9,4 @@ Initial Release
 [FEA] My Meals Recipe Card Button
 [FEA] Add price per unit of mesurement
 [FEA] Add Get Price button with success & price not available
+[FEA] Show Recipe Details Button with success & recipe not available
