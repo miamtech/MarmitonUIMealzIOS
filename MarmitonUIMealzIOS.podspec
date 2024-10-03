@@ -1,9 +1,9 @@
 Pod::Spec.new do |spec|
     spec.name         = 'MarmitonUIMealzIOS'
-    spec.version      = '1.0.0-alpha'
-    spec.summary      = 'Mealz UI iOS SDK'
+    spec.version      = '5.0.0'
+    spec.summary      = 'Marmitom Mealz UI iOS SDK'
     spec.description  = <<-DESC
-        Mealz UI iOS SDK.
+        Marmitom Mealz UI iOS SDK.
         DESC
 
     spec.homepage     = 'https://www.miam.tech'
@@ -12,9 +12,7 @@ Pod::Spec.new do |spec|
     spec.source       = { :git => "https://github.com/miamtech/MarmitonUIMealzIOS.git", :tag => "#{spec.version}" }
     spec.platform     = :ios, "12.0"
     spec.swift_version = '5.8'
-    spec.dependency 'MealzCoreRelease', '~> 4.1.0-alpha'
-    spec.dependency 'MealziOSSDKRelease', '~> 4.1.0-alpha'
-    spec.dependency 'MealzUIiOSSDKRelease', '~> 1.1.0-alpha'
-    spec.dependency 'MealzNaviOSSDKRelease', '~> 1.1.0-alpha'
+    spec.dependency 'MealzCoreRelease', '~> 5.0.0'
+    spec.dependency 'MealziOSSDKRelease', '~> 5.0.0'
     spec.static_framework = true
 end
