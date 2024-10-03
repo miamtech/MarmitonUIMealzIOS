@@ -11,3 +11,5 @@
 "com_miam_item_selector_in_basket" = "Déjà sélectionné";
 "com_miam_item_selector_no_substitution" = "Nous n'avons trouvé aucun produit pouvant remplacer celui-ci, effectuez une recherche pour en choisir un autre.";
 "com_miam_my_meals_no_meal_in_basket" = "Vous n'avez ajouté aucun repas pour le moment";
+"com_miam_price_per_guest" = "/pers.";
+"com_miam_see_price" = "Afficher le prix";

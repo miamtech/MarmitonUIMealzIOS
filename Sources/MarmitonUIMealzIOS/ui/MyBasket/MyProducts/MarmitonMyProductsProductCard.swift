@@ -5,10 +5,9 @@
 //  Created by Diarmuid McGonagle on 04/07/2024.
 //
 
-import SwiftUI
 import mealzcore
 import MealziOSSDK
-import MealzUIiOSSDK
+import SwiftUI
 
 @available(iOS 14, *)
 public struct MarmitonMyProductsProductCard: MyProductsProductCardProtocol {
@@ -30,7 +29,7 @@ public struct MarmitonMyProductsProductCard: MyProductsProductCardProtocol {
                         MealzMyProductsProductCard.replaceButton(
                             numberOfRecipesSharingThisIngredient: params.data.numberOfRecipesSharingThisIngredient,
                             replaceProduct: params.onReplaceProduct)
-                        .padding(.top, 4)
+                            .padding(.top, 4)
                         Spacer()
                     }
                     Spacer()
@@ -41,7 +40,7 @@ public struct MarmitonMyProductsProductCard: MyProductsProductCardProtocol {
                     MarmitonRecipeDetailsAddedProductView.MarmitonProductCounter(
                         productQuantity: params.data.productQuantity,
                         isLocked: params.isLocked,
-                        updateQuantity:  params.updateQuantity)
+                        updateQuantity: params.updateQuantity)
                 }
             }
             .padding(Dimension.sharedInstance.lPadding)

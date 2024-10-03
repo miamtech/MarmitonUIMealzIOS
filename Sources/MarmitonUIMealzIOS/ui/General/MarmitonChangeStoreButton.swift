@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MealziOSSDK
-import MealzUIiOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonChangeStoreButton: View {
@@ -16,6 +15,7 @@ public struct MarmitonChangeStoreButton: View {
         self.changeStore = changeStore
     }
     public var body: some View {
+        
         StoreLocatorButton(params: StoreLocatorButtonParameters(
             actions: StoreLocatorButtonActions(changeStore: changeStore)))
     }

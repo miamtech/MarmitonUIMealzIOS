@@ -11,3 +11,5 @@
 "com_miam_item_selector_in_basket" = "Already selected";
 "com_miam_item_selector_no_substitution" = "We have not found any products to replace this item, launch another search to choose a different product.";
 "com_miam_my_meals_no_meal_in_basket" = "You have not added any recipes yet";
+"com_miam_price_per_guest" = "/pers.";
+"com_miam_see_price" = "Get price";
