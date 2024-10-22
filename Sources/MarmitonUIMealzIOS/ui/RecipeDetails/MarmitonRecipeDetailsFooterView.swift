@@ -40,10 +40,6 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
                         OpenMyMealsCTA(
                             callToAction: {
                                 // only launch event when all products have been added
-                                MealzDI.shared.analyticsService.sendEvent(
-                                    eventType: AnalyticsCompanion.shared.EVENT_BASKET_PREVIEW,
-                                    path: "",
-                                    props: AnalyticsCompanion.setProps())
                                 params.callToAction()
                                 openMyBasket()
                             },

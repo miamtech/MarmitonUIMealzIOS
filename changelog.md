@@ -1,3 +1,7 @@
+# 5.1.0
+[FEA] Updated analytics routes
+[FEA] Implemented empty Recipe Details Floating Header & Tags templates
+
 # 4.1.0
 Initial Release
 [FEA] Add Localization files in French & English
