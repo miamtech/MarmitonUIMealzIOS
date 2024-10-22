@@ -4,7 +4,7 @@
 import Foundation
 import PackageDescription
 
-let configurationMode = "dev" // ProcessInfo.processInfo.environment["CONFIGURATION_MODE"] ?? "dev"
+let configurationMode = "prod"
 
 let package = Package(
     name: "MarmitonUIMealzIOS",
@@ -34,16 +34,20 @@ let package = Package(
             )
         } else if configurationMode == "devWithSPM" {
             dependencies.append(contentsOf: [
-                .package(path: "../MealzUIiOSSDKRelease"),
-                .package(path: "../MealzNaviOSSDKRelease"),
                 .package(path: "../MealzCoreRelease"),
                 .package(path: "../MealziOSSDKRelease")
             ]
             )
         } else {
             dependencies.append(contentsOf: [
-                .package(url: "https://github.com/MealzStaging/MealziOSSDKRelease", exact: "5.0.0"),
-                .package(url: "https://github.com/MealzStaging/MealzCoreRelease", from: "4.1.0")
+                .package(
+                    url: "https://github.com/miamtech/MealziOSSDKRelease",
+                    exact: "5.1.0"
+                ),
+                .package(
+                    url: "https://github.com/miamtech/MealzCoreRelease",
+                    from: "5.1.0"
+                )
             ]
             )
         }
@@ -66,8 +70,14 @@ let package = Package(
                     )
                 } else {
                     dependencies.append(contentsOf: [
-                        .product(name: "MealzCore", package: "MealzCoreRelease"),
-                        .product(name: "MealziOSSDK", package: "MealziOSSDKRelease")
+                        .product(
+                            name: "MealzCore",
+                            package: "MealzCoreRelease"
+                        ),
+                        .product(
+                            name: "MealziOSSDK",
+                            package: "MealziOSSDKRelease"
+                        )
                     ]
                     )
                 }

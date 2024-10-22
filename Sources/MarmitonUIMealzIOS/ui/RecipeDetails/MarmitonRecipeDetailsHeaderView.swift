@@ -36,7 +36,7 @@ public struct MarmitonRecipeDetailsHeaderView: RecipeDetailsHeaderProtocol {
                         Spacer()
                     }
                 }, buttonAction: params.onUpdateGuests)
-            .padding([.top, .horizontal], Dimension.sharedInstance.mlPadding)
+            .padding(Dimension.sharedInstance.mlPadding)
         }
     }
 }
