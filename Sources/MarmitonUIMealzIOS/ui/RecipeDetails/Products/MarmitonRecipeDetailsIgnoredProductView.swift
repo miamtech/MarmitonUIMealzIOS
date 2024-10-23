@@ -5,7 +5,6 @@
 //  Created by Diarmuid McGonagle on 03/07/2024.
 //
 
-import MealzUIiOSSDK
 import SwiftUI
 import MealziOSSDK
 import mealzcore
