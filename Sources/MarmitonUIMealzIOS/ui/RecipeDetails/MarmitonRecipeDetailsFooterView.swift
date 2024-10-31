@@ -5,10 +5,9 @@
 //  Created by miam x didi on 25/04/2024.
 //
 
-import SwiftUI
-import MealziOSSDK
 import mealzcore
-import MealzUIiOSSDK
+import MealziOSSDK
+import SwiftUI
 
 @available(iOS 14, *)
 public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
@@ -20,53 +19,48 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
     public func content(params: RecipeDetailsFooterParameters) -> some View {
         var lockButton: Bool {
             return params.priceStatus == ComponentUiState.locked
-            || params.priceStatus == ComponentUiState.loading
-            || params.isAddingAllIngredients
+                || params.priceStatus == ComponentUiState.loading
+                || params.isAddingAllIngredients
         }
         return HStack(spacing: 0) {
             if lockButton {
-                MealzUIiOSSDK.ProgressLoader(color: .primary, size: 24)
+                ProgressLoader(color: .primary, size: 24)
             } else {
                 if params.totalPriceOfProductsAdded > 0 {
                     PriceInMyBasket(totalPriceInBasket: params.totalPriceOfProductsAdded.currencyFormatted)
                 }
             }
             Spacer()
-                if params.isAddingAllIngredients || lockButton {
-                    LoadingButton()
-                } else {
-                    switch params.ingredientsStatus.type {
-                    case .noMoreToAdd:
-                        if params.totalPriceOfProductsAdded > 0 {
-                            OpenMyMealsCTA(
-                                callToAction: {
-                                    // only launch event when all products have been added
-                                    MealzDI.shared.analyticsService.sendEvent(
-                                        eventType: AnalyticsCompanion.shared.EVENT_BASKET_PREVIEW,
-                                        path: "",
-                                        props: AnalyticsCompanion.setProps())
-                                    params.callToAction()
-                                    openMyBasket()
-                                },
-                                buttonText: NSLocalizedString("mealz_see_my_basket", bundle: MarmitonUIMealzIOSBundle.bundle, comment: "Open My Meals button"),
-                                disableButton: lockButton)
-                        } else {
-                            ContinueMyShoppingCTA(
-                                callToAction: params.callToAction,
-                                buttonText: Localization.recipeDetails.continueShopping.localised,
-                                disableButton: lockButton)
-                        }
-                    default:
-                        MealzAddAllToBasketCTA(
+            if params.isAddingAllIngredients || lockButton {
+                LoadingButton()
+            } else {
+                switch params.ingredientsStatus.type {
+                case .noMoreToAdd:
+                    if params.totalPriceOfProductsAdded > 0 {
+                        OpenMyMealsCTA(
+                            callToAction: {
+                                // only launch event when all products have been added
+                                params.callToAction()
+                                openMyBasket()
+                            },
+                            buttonText: NSLocalizedString("mealz_see_my_basket", bundle: MarmitonUIMealzIOSBundle.bundle, comment: "Open My Meals button"),
+                            disableButton: lockButton)
+                    } else {
+                        ContinueMyShoppingCTA(
                             callToAction: params.callToAction,
-                            buttonText: String(format: String.localizedStringWithFormat(
-                                Localization.ingredient.addProduct(numberOfProducts: params.ingredientsStatus.count).localised,
-                                params.ingredientsStatus.count),
-                                               params.ingredientsStatus.count).appending(" (\(params.totalPriceOfRemainingProducts.currencyFormatted))"),
+                            buttonText: Localization.recipeDetails.continueShopping.localised,
                             disableButton: lockButton)
                     }
+                default:
+                    MealzAddAllToBasketCTA(
+                        callToAction: params.callToAction,
+                        buttonText: String(format: String.localizedStringWithFormat(
+                            Localization.ingredient.addProduct(numberOfProducts: params.ingredientsStatus.count).localised,
+                            params.ingredientsStatus.count),
+                        params.ingredientsStatus.count).appending(" (\(params.totalPriceOfRemainingProducts.currencyFormatted))"),
+                        disableButton: lockButton)
                 }
-
+            }
         }
         .padding(Dimension.sharedInstance.lPadding)
         .frame(maxWidth: .infinity)
@@ -74,10 +68,10 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
         .background(Color.white)
     }
     
-    internal struct LoadingButton: View {
+    struct LoadingButton: View {
         var body: some View {
             Button(action: {}, label: {
-                MealzUIiOSSDK.ProgressLoader(color: .white, size: 24)
+                ProgressLoader(color: .white, size: 24)
             })
             .padding(Dimension.sharedInstance.mlPadding)
             .background(Color.mealzColor(.primary))
@@ -85,7 +79,7 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
         }
     }
     
-    internal struct OpenMyMealsCTA: View {
+    struct OpenMyMealsCTA: View {
         let callToAction: () -> Void
         let buttonText: String
         let disableButton: Bool
@@ -113,7 +107,7 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
         }
     }
     
-    internal struct ContinueMyShoppingCTA: View {
+    struct ContinueMyShoppingCTA: View {
         let callToAction: () -> Void
         let buttonText: String
         let disableButton: Bool
@@ -127,11 +121,9 @@ public struct MarmitonRecipeDetailsFooterView: RecipeDetailsFooterProtocol {
             .padding(Dimension.sharedInstance.mlPadding)
             .overlay( /// apply a rounded border
                 RoundedRectangle(cornerRadius: Dimension.sharedInstance.buttonCornerRadius)
-                    .stroke(Color.mealzColor(.primary), lineWidth: 1)
-            )
+                    .stroke(Color.mealzColor(.primary), lineWidth: 1))
             .disabled(disableButton)
             .darkenView(disableButton)
         }
     }
-    
 }

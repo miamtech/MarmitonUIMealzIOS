@@ -53,11 +53,7 @@ public class MealzStoreLocatorWebView: UIViewController {
             webView.loadFileURL(url, allowingReadAccessTo: urlToLoad.deletingLastPathComponent())
         }
         // send PageView Analytics event
-        MealzDI.shared.analyticsService.sendEvent(
-            eventType: AnalyticsCompanion.shared.EVENT_PAGEVIEW,
-            path: "/locator",
-            props: AnalyticsCompanion.setProps()
-        )
+        StoreLocatorButtonViewModel.companion.sendPageView()
     }
 }
 
@@ -73,15 +69,18 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                         if let posId = json["posId"] as? String {
                             Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
                                 // send pos.selected Analytics event
-                                if let posName = json["posName"] as? String {
-                                    MealzDI.shared.analyticsService.sendEvent(
-                                        eventType: AnalyticsCompanion.shared.EVENT_POS_SELECTED,
-                                        path: "",
-                                        props: AnalyticsCompanion.setProps(posId: posId, posName: posName)
+                                if let posName = json["posName"] as? String,
+                                   let retailerId = json["supplierId"] as? String,
+                                    let retailerName = json["supplierName"] as? String {
+                                    StoreLocatorButtonViewModel.companion.sendPosSelectedEvent(
+                                        posId: posId,
+                                        posName: posName,
+                                        supplierName: retailerName
                                     )
-                                }
-                                if let retailerId = json["supplierId"] as? String, let retailerName = json["supplierName"] as? String {
-                                    Mealz.shared.user.setRetailer(retailerId: retailerId, retailerName: retailerName)
+                                    Mealz.shared.user.setRetailer(
+                                        retailerId: retailerId,
+                                        retailerName: retailerName
+                                    )
                                 }
                                 self.dismiss(animated: true)
                             }

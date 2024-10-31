@@ -9,7 +9,6 @@ import Foundation
 import mealzcore
 import MealziOSSDK
 import SwiftUI
-import MealzUIiOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonMyMealRecipeCard: MyMealRecipeCardProtocol {
@@ -54,7 +53,7 @@ public struct MarmitonMyMealRecipeCard: MyMealRecipeCardProtocol {
                             params.onDeleteRecipe()
                         } label: {
                             if params.isDeleting {
-                                MealzUIiOSSDK.ProgressLoader(color: Color.mealzColor(.primary), size: 20)
+                                ProgressLoader(color: Color.mealzColor(.primary), size: 20)
                             } else {
                                 Image.mealzIcon(icon: .trash)
                                     .renderingMode(.template)
