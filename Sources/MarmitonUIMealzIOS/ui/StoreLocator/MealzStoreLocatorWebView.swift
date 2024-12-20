@@ -72,7 +72,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                                 if let posName = json["posName"] as? String,
                                    let retailerId = json["supplierId"] as? String,
                                     let retailerName = json["supplierName"] as? String {
-                                    StoreLocatorButtonViewModel.companion.sendPosSelectedEvent(
+                                    StoreLocatorButtonViewModel.companion.sendLocatorSelectEvent(
                                         posId: posId,
                                         posName: posName,
                                         supplierName: retailerName
