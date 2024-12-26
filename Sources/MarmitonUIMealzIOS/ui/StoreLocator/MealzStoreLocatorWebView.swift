@@ -11,11 +11,13 @@ import MealziOSSDK
 import SwiftUI
 import UIKit
 import WebKit
+import CoreLocation
 
 public class MealzStoreLocatorWebView: UIViewController {
     var webView: WKWebView
     var contentController = WKUserContentController()
     var urlToLoad: URL
+    private let locationManager = LocationManager()
     var onSelectItem: (String?) -> Void
     
     public init(url: URL, onSelectItem: @escaping (Any?) -> Void) {
@@ -28,6 +30,23 @@ public class MealzStoreLocatorWebView: UIViewController {
         self.onSelectItem = onSelectItem
         super.init(nibName: nil, bundle: nil)
         contentController.add(self, name: "Mealz")
+        
+        // Add consoleLog handler for logging
+        contentController.add(self, name: "consoleLog")
+        
+        // Inject JavaScript for console.log interception
+        let logInjectionScript = """
+        (function() {
+            const oldLog = console.log;
+            console.log = function(...args) {
+                window.webkit.messageHandlers.consoleLog.postMessage(args.join(' '));
+                oldLog.apply(console, args);
+            };
+        })();
+        """
+        let userScript = WKUserScript(source: logInjectionScript, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        contentController.addUserScript(userScript)
+        
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.configuration.preferences.javaScriptEnabled = true
     }
@@ -54,12 +73,50 @@ public class MealzStoreLocatorWebView: UIViewController {
         }
         // send PageView Analytics event
         StoreLocatorButtonViewModel.companion.sendPageView()
+        
+        // Check current permission status
+        let currentStatus = CLLocationManager.authorizationStatus()
+
+        if currentStatus == .authorizedWhenInUse || currentStatus == .authorizedAlways {
+            // Permission is already granted
+            locationManager.setPermissionFromClientApp(status: currentStatus)
+        } else {
+            // Request permissions
+            locationManager.requestLocationPermissions()
+        }
+
+        // Handle location updates
+        locationManager.onLocationUpdate = { location in
+            // we have to make sure the webview has shown & JS enabled so we wait 1 second
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.passCoordsToWebView(
+                    latitude: String(location.coordinate.latitude),
+                    longitude: String(location.coordinate.longitude))
+                // stop listening
+                self.locationManager.stopUpdatingLocation()
+            }
+        }
+
+        // Handle authorization changes
+        locationManager.onAuthorizationChange = { status in
+            switch status {
+            case .authorizedWhenInUse, .authorizedAlways:
+                print("Location access granted.")
+                self.locationManager.startUpdatingLocation()
+            case .denied, .restricted:
+                print("Location access denied.")
+            default:
+                break
+            }
+        }
     }
 }
 
 @available(iOS 15.0, *)
 extension MealzStoreLocatorWebView: WKScriptMessageHandler {
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print("Received message body:", message.body)
+
         guard let body = message.body as? String, let data = body.data(using: .utf8) else { return }
         do {
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
@@ -101,7 +158,19 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                 }
             }
         } catch {
-            print("Erreur lors de la désérialisation JSON:", error)
+        }
+    }
+}
+
+extension MealzStoreLocatorWebView {
+    func passCoordsToWebView(latitude: String, longitude: String) {
+        let jsCode = "searchBasedOnGeoLocation('\(latitude)', '\(longitude)');"
+        
+        // Execute the JavaScript in the WebView
+        webView.evaluateJavaScript(jsCode) { result, error in
+            if let error = error {
+                print("Error calling JavaScript:", error)
+            }
         }
     }
 }
