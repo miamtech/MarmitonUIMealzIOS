@@ -24,7 +24,7 @@ public class MealzStoreLocatorWebView: UIViewController {
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-        config.setValue(true, forKey: "_allowUniversalAccessFromFileURLs")
+        config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         webView = WKWebView(frame: .zero, configuration: config)
         urlToLoad = url
         self.onSelectItem = onSelectItem
