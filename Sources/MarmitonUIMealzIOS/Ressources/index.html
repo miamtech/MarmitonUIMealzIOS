@@ -35,6 +35,37 @@
         };
         window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
+    
+    storeLocatorElement.addEventListener('searchChange', (e) => {
+        var jsonObject = {
+            message: "searchChange",
+            searchTerm : e.detail.searchTerm,
+            numberOfResults : e.detail.storesFoundCount
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
+    
+    storeLocatorElement.addEventListener('filterChange', (e) => {
+        var jsonObject = {
+            message: "filterChange",
+            supplierName : e.detail.supplierName
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
+    
+    storeLocatorElement.addEventListener('mapSelected', (e) => {
+        var jsonObject = {
+            message: "mapSelected"
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
+    
+    storeLocatorElement.addEventListener('listSelected', (e) => {
+        var jsonObject = {
+            message: "listSelected"
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
 
       function getByAddress(address, radius, selectedSuppliers) {
         const getByAddressRequest = new XMLHttpRequest();
