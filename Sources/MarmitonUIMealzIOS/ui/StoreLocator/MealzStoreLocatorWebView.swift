@@ -22,7 +22,7 @@ public class MealzStoreLocatorWebView: UIViewController {
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-        config.setValue(true, forKey: "_allowUniversalAccessFromFileURLs")
+        config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         webView = WKWebView(frame: .zero, configuration: config)
         urlToLoad = url
         self.onSelectItem = onSelectItem
@@ -67,22 +67,27 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                     switch message {
                     case "posIdChange":
                         if let posId = json["posId"] as? String {
-                            Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
-                                // send pos.selected Analytics event
-                                if let posName = json["posName"] as? String,
-                                   let retailerId = json["supplierId"] as? String,
-                                    let retailerName = json["supplierName"] as? String {
-                                    StoreLocatorButtonViewModel.companion.sendLocatorSelectEvent(
-                                        posId: posId,
-                                        posName: posName,
-                                        supplierName: retailerName
-                                    )
-                                    Mealz.shared.user.setRetailer(
-                                        retailerId: retailerId,
-                                        retailerName: retailerName
-                                    )
+                            if PointOfSaleRepositoryCompanion().pointOfSaleMealzId == posId {
+                                dismiss(animated: true)
+                            } else {
+                                Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
+                                    // send pos.selected Analytics event
+                                    if let posName = json["posName"] as? String,
+                                       let retailerId = json["supplierId"] as? String,
+                                       let retailerName = json["supplierName"] as? String
+                                    {
+                                        StoreLocatorButtonViewModel.companion.sendLocatorSelectEvent(
+                                            posId: posId,
+                                            posName: posName,
+                                            supplierName: retailerName
+                                        )
+                                        Mealz.shared.user.setRetailer(
+                                            retailerId: retailerId,
+                                            retailerName: retailerName
+                                        )
+                                    }
+                                    self.dismiss(animated: true)
                                 }
-                                self.dismiss(animated: true)
                             }
                         }
                     case "showChange":
