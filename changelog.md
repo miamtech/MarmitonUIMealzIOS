@@ -1,3 +1,6 @@
+# 5.4.0
+[Fix] Fix store selector select same poi
+
 # 5.1.0
 [FEA] Updated analytics routes
 [FEA] Implemented empty Recipe Details Floating Header & Tags templates

@@ -184,22 +184,26 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
             LogHandler.companion.error("Missing posId in payload")
             return
         }
-
-        Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
-            if let posName = payload["posName"] as? String,
-               let retailerId = payload["supplierId"] as? String,
-               let retailerName = payload["supplierName"] as? String {
-                StoreLocatorButtonViewModel.companion.sendLocatorSelectEvent(
-                    posId: posId,
-                    posName: posName,
-                    supplierName: retailerName
-                )
-                Mealz.shared.user.setRetailer(
-                    retailerId: retailerId,
-                    retailerName: retailerName
-                )
-            }
-            self.dismiss(animated: true)
+      
+        if PointOfSaleRepositoryCompanion().pointOfSaleMealzId == posId {
+            dismiss(animated: true)
+        } else {
+          Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
+              if let posName = payload["posName"] as? String,
+                 let retailerId = payload["supplierId"] as? String,
+                 let retailerName = payload["supplierName"] as? String {
+                  StoreLocatorButtonViewModel.companion.sendLocatorSelectEvent(
+                      posId: posId,
+                      posName: posName,
+                      supplierName: retailerName
+                  )
+                  Mealz.shared.user.setRetailer(
+                      retailerId: retailerId,
+                      retailerName: retailerName
+                  )
+              }
+              self.dismiss(animated: true)
+          }
         }
     }
 
