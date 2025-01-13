@@ -42,11 +42,11 @@ let package = Package(
             dependencies.append(contentsOf: [
                 .package(
                     url: "https://github.com/miamtech/MealziOSSDKRelease",
-                    exact: "5.1.0"
+                    exact: "5.4.0"
                 ),
                 .package(
                     url: "https://github.com/miamtech/MealzCoreRelease",
-                    from: "5.1.0"
+                    from: "5.4.0"
                 )
             ]
             )
