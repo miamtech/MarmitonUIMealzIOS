@@ -8,12 +8,14 @@
 
   <!-- LOAD STORE LOCATOR SCRIPT HERE -->
   <script type="module" src="https://unpkg.com/mealz-components@1/dist/store-locator/store-locator.min.js"></script>
-  <!--  <script type="module" src="store-locator.min.js"></script>--> <!--// for testing locally-->
+<!--<script type="module" src="https://storage.googleapis.com/assets.miam.tech/store-locator/dist/store-locator/store-locator.min.js"></script><!--// for testing uat-->-->
+<!--    <script type="module" src="store-locator.min.js"></script> <!--// for testing locally-->-->
 </head>
 <body>
 <!-- Will show store locator on page load -->
 <mealz-store-locator show></mealz-store-locator>
 <script>
+
       const storeLocatorElement = document.querySelector('mealz-store-locator');
       storeLocatorElement.addEventListener('posIdChange', (e) => {
           var jsonObject = {
@@ -34,21 +36,52 @@
         };
         window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
       })
+    
+    storeLocatorElement.addEventListener('searchChange', (e) => {
+        var jsonObject = {
+            message: "searchChange",
+            searchTerm : e.detail.searchTerm,
+            numberOfResults : e.detail.storesFoundCount
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
+    
+    storeLocatorElement.addEventListener('filterChange', (e) => {
+        var jsonObject = {
+            message: "filterChange",
+            supplierName : e.detail.supplierName
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
+    
+    storeLocatorElement.addEventListener('mapSelected', (e) => {
+        var jsonObject = {
+            message: "mapSelected"
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
+    
+    storeLocatorElement.addEventListener('listSelected', (e) => {
+        var jsonObject = {
+            message: "listSelected"
+        };
+        window.webkit.messageHandlers.Mealz.postMessage(JSON.stringify(jsonObject));
+    })
 
       function getByAddress(address, radius, selectedSuppliers) {
         const getByAddressRequest = new XMLHttpRequest();
         let url = `https://api.miam.tech/api/v1/point-of-sales/search?address=${address}&max_distance_km=${radius}&include=supplier&filter[affiliate]=true`;
         if (selectedSuppliers.length > 0) {
-          url += `&filter[supplier]=${selectedSuppliers.join(',')}`
+          url += `&filter[supplier_id]=${selectedSuppliers.join(',')}`
         }
         getByAddressRequest.open('GET', url);
 
         return {
           subscribe: function(callback) {
-            console.debug('[Mealz components] Request getByAddress()');
+            console.log('[Mealz components] Request getByAddress()');
             getByAddressRequest.onload = () => {
               const resp = JSON.parse(getByAddressRequest.response);
-              console.debug('[Mealz components] getByAddress response received', resp);
+              console.log('[Mealz components] getByAddress response received', resp);
               callback(resp);
             }
             getByAddressRequest.send();
@@ -63,25 +96,67 @@
 
         return {
           subscribe: function(callback) {
-            console.debug('[Mealz components] Request getAffiliateSuppliers()');
+            console.log('[Mealz components] Request getAffiliateSuppliers()');
             getAffiliateSuppliersRequest.onload = () => {
               const resp = JSON.parse(getAffiliateSuppliersRequest.response);
-              console.debug('[Mealz components] getAffiliateSuppliers response received', resp.data);
+              console.log('[Mealz components] getAffiliateSuppliers response received', resp.data);
               callback(resp.data);
+              // if we do not have coords, we input null to prevent the infini loader
+              if (window["latitude"] == null || window["longitude"] == null) {
+                  storeLocatorElement.geolocationCoordinates = null;
+              }
             }
             getAffiliateSuppliersRequest.send();
           }
         };
       }
+    
+      function getByCoordinates(lng, lat, radius, selectedSuppliers) {
+          const getByCoordsRequest = new XMLHttpRequest();
+          let url = `https://api.miam.tech/api/v1/point-of-sales/search?latitude=${lat}&longitude=${lng}&max_distance_km=${radius}&include=supplier&filter[affiliate]=true`;
+          if (selectedSuppliers.length > 0) {
+            url += `&filter[supplier_id]=${selectedSuppliers.join(',')}`
+          }
+          getByCoordsRequest.open('GET', url);
+
+          return {
+            subscribe: function(callback) {
+              getByCoordsRequest.onload = () => {
+                  try {
+                      const resp = JSON.parse(getByCoordsRequest.response);
+                      callback(resp);
+                  } catch (error) {
+                      console.log('[Mealz components] Failed to process response:', error.message);
+                      console.log('[Mealz components] Raw response text:', getByCoordsRequest.response);
+                  }
+              };
+
+              getByCoordsRequest.send();
+            }
+          };
+      }
 
       window.mealz = {
         pos: {
-          getByAddress: getByAddress
+          getByAddress: getByAddress,
+          getByCoordinates: getByCoordinates
         },
         supplier: {
           getAffiliateSuppliers: getAffiliateSuppliers
         }
       }
+
+    function searchBasedOnGeoLocation(latitude, longitude) {
+        const geolocationPosition = {
+            coords: {
+                longitude: longitude,
+                latitude: latitude,
+            },
+            timestamp: Date.now()
+        };
+
+       storeLocatorElement.geolocationCoordinates = geolocationPosition;
+    };
     </script>
 </body>
 </html>
