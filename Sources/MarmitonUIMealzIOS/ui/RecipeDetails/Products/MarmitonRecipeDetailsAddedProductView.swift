@@ -33,7 +33,7 @@ public struct MarmitonRecipeDetailsAddedProductView: RecipeDetailsAddedProductPr
                     pricePerUnitOfMeasurement: params.pricePerUnitOfMeasurement, productUnit: params.productUnit, onChooseProduct: params.onChangeProduct)
             }
             HStack(spacing: Dimension.sharedInstance.lPadding) {
-                MealzProductBase.productPrice(formattedProductPrice: params.data.formattedProductPrice)
+                MealzProductBase.productPrice(formattedProductPrice: params.data.formattedProductPrice, discountType: params.data.discountType, discountedPrice: params.data.discountedPrice)
                 Spacer()
                 MarmitonProductCounter(
                     productQuantity: params.data.productQuantity,
