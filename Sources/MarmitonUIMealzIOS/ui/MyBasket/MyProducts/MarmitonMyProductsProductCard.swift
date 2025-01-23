@@ -35,7 +35,7 @@ public struct MarmitonMyProductsProductCard: MyProductsProductCardProtocol {
                     Spacer()
                 }
                 HStack {
-                    MealzProductBase.productPrice(formattedProductPrice: params.data.formattedProductPrice)
+                    MealzProductBase.productPrice(formattedProductPrice: params.data.formattedProductPrice, discountType: params.data.discountType, discountedPrice: params.data.discountedPrice)
                     Spacer()
                     MarmitonRecipeDetailsAddedProductView.MarmitonProductCounter(
                         productQuantity: params.data.productQuantity,
