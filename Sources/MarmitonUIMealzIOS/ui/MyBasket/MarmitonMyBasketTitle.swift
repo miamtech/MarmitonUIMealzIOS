@@ -10,13 +10,22 @@ import MealziOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonMyBasketTitle: BaseTitleProtocol {
+    let viewOptions: StoreLocatorSectionViewOptions?
     let changeStore: () -> Void
-    public init(changeStore: @escaping () -> Void) {
+    
+    public init(
+        viewOptions: StoreLocatorSectionViewOptions? = nil,
+        changeStore: @escaping () -> Void
+    ) {
+        self.viewOptions = viewOptions
         self.changeStore = changeStore
     }
     public func content(params: TitleParameters) -> some View {
         VStack {
-            MarmitonChangeStoreButton(changeStore: changeStore)
+            StoreLocatorSection(params: StoreLocatorSectionParameters(
+                viewOptions: viewOptions ?? StoreLocatorSectionViewOptions(),
+                actions: StoreLocatorButtonActions(changeStore: changeStore)
+            ))
             MealzMyMealsTitle().content(params: params)
         }
     }
