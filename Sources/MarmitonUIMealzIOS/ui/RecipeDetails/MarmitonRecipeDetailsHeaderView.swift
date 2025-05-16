@@ -18,9 +18,6 @@ public struct MarmitonRecipeDetailsHeaderView: RecipeDetailsHeaderProtocol {
 
     public func content(params: RecipeDetailsHeaderParameters) -> some View {
         VStack {
-            StoreLocatorSection(params: StoreLocatorSectionParameters(
-                actions: StoreLocatorButtonActions(changeStore: changeStore)
-            ))
             MarmitonCounter(
                 currentAmount: params.currentGuests,
                 backgroundColor: Color.clear,
