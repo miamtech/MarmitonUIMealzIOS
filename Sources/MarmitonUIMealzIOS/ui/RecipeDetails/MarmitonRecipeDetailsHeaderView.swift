@@ -11,12 +11,13 @@ import MealziOSSDK
 @available(iOS 14, *)
 public struct MarmitonRecipeDetailsHeaderView: RecipeDetailsHeaderProtocol {
     let changeStore: () -> Void
+
     public init(changeStore: @escaping () -> Void) {
         self.changeStore = changeStore
     }
+
     public func content(params: RecipeDetailsHeaderParameters) -> some View {
         VStack {
-            MarmitonChangeStoreButton(changeStore: changeStore)
             MarmitonCounter(
                 currentAmount: params.currentGuests,
                 backgroundColor: Color.clear,
