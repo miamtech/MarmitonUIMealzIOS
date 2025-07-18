@@ -19,6 +19,7 @@ public class MealzStoreLocatorWebView: UIViewController {
     var contentController = WKUserContentController()
     var urlToLoad: URL
     private let locationManager = LocationManager()
+    var viewDismissOnUserActionResult: Bool = false
     var onSelectItem: (String?) -> Void
     var onSelectionCancelled: () -> Void
     
@@ -133,6 +134,13 @@ public class MealzStoreLocatorWebView: UIViewController {
             }
         }
     }
+    
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if (!viewDismissOnUserActionResult) {
+            self.onSelectionCancelled()
+        }
+    }
 }
 
 @available(iOS 15.0, *)
@@ -194,7 +202,9 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
         }
       
         if PointOfSaleRepositoryCompanion().pointOfSaleMealzId == posId {
+            self.viewDismissOnUserActionResult = true
             dismiss(animated: true)
+            self.onSelectItem(posId)
         } else {
           Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
               if let posName = payload["posName"] as? String,
@@ -210,10 +220,11 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                       retailerName: retailerName
                   )
               }
+              self.viewDismissOnUserActionResult = true
               self.dismiss(animated: true)
+              self.onSelectItem(posId)
           }
         }
-        self.onSelectItem(posId)
     }
 
     private func handleShowChange(payload: [String: Any]) {
@@ -223,6 +234,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
         }
 
         if !isBeingShown {
+            self.viewDismissOnUserActionResult = true
             StoreLocatorButtonViewModel.companion.sendLocatorBackEvent()
             if let vc = presentingViewController {
                 dismiss(animated: true)
@@ -289,7 +301,6 @@ struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
         onSelectItem: @escaping (Any?) -> Void,
         onSelectionCancelled: @escaping () -> Void
     ) throws {
-        print("MealzWebViewSwiftUI urlToLoad: \(urlToLoad)")
         self.urlToLoad = urlToLoad
         self.onSelectItem = onSelectItem
         self.onSelectionCancelled = onSelectionCancelled
