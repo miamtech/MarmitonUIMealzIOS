@@ -14,7 +14,7 @@ import WebKit
 import CoreLocation
 
 @available(iOS 14.0, *)
-public class MealzStoreLocatorWebView: UIViewController {
+public class MealzStoreLocatorWebView: UIViewController, WKNavigationDelegate {
     var webView: WKWebView
     var contentController = WKUserContentController()
     var urlToLoad: URL
@@ -58,7 +58,8 @@ public class MealzStoreLocatorWebView: UIViewController {
             forMainFrameOnly: true
         )
         contentController.addUserScript(userScript)
-        
+
+        webView.navigationDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.configuration.preferences.javaScriptEnabled = true
         webView.configuration.defaultWebpagePreferences.allowsContentJavaScript = true
@@ -97,7 +98,10 @@ public class MealzStoreLocatorWebView: UIViewController {
         }
         // send PageView Analytics event
         StoreLocatorButtonViewModel.companion.sendPageView()
-        
+    }
+
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // Page is loaded, can get geolocation information and set it if possible (user authorized it)
         // Check current permission status
         let currentStatus = CLLocationManager.authorizationStatus()
 
