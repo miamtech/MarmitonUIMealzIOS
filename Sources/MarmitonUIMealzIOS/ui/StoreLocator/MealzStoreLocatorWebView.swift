@@ -13,14 +13,21 @@ import UIKit
 import WebKit
 import CoreLocation
 
-public class MealzStoreLocatorWebView: UIViewController {
+@available(iOS 14.0, *)
+public class MealzStoreLocatorWebView: UIViewController, WKNavigationDelegate {
     var webView: WKWebView
     var contentController = WKUserContentController()
     var urlToLoad: URL
     private let locationManager = LocationManager()
+    var viewDismissOnUserActionResult: Bool = false
     var onSelectItem: (String?) -> Void
+    var onSelectionCancelled: () -> Void
     
-    public init(url: URL, onSelectItem: @escaping (Any?) -> Void) {
+    public init(
+        url: URL,
+        onSelectItem: @escaping (Any?) -> Void,
+        onSelectionCancelled: @escaping () -> Void
+    ) {
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
@@ -28,6 +35,7 @@ public class MealzStoreLocatorWebView: UIViewController {
         webView = WKWebView(frame: .zero, configuration: config)
         urlToLoad = url
         self.onSelectItem = onSelectItem
+        self.onSelectionCancelled = onSelectionCancelled
         super.init(nibName: nil, bundle: nil)
         contentController.add(self, name: "Mealz")
         
@@ -50,9 +58,11 @@ public class MealzStoreLocatorWebView: UIViewController {
             forMainFrameOnly: true
         )
         contentController.addUserScript(userScript)
-        
+
+        webView.navigationDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
         webView.configuration.preferences.javaScriptEnabled = true
+        webView.configuration.defaultWebpagePreferences.allowsContentJavaScript = true
     }
     
     @available(*, unavailable)
@@ -88,7 +98,10 @@ public class MealzStoreLocatorWebView: UIViewController {
         }
         // send PageView Analytics event
         StoreLocatorButtonViewModel.companion.sendPageView()
-        
+    }
+
+    public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // Page is loaded, can get geolocation information and set it if possible (user authorized it)
         // Check current permission status
         let currentStatus = CLLocationManager.authorizationStatus()
 
@@ -123,6 +136,13 @@ public class MealzStoreLocatorWebView: UIViewController {
             default:
                 break
             }
+        }
+    }
+    
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if (!viewDismissOnUserActionResult) {
+            self.onSelectionCancelled()
         }
     }
 }
@@ -186,7 +206,9 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
         }
       
         if PointOfSaleRepositoryCompanion().pointOfSaleMealzId == posId {
+            self.viewDismissOnUserActionResult = true
             dismiss(animated: true)
+            self.onSelectItem(posId)
         } else {
           Mealz.User.shared.setStoreWithMealzIdWithCallBack(storeId: posId) {
               if let posName = payload["posName"] as? String,
@@ -202,7 +224,9 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
                       retailerName: retailerName
                   )
               }
+              self.viewDismissOnUserActionResult = true
               self.dismiss(animated: true)
+              self.onSelectItem(posId)
           }
         }
     }
@@ -214,6 +238,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
         }
 
         if !isBeingShown {
+            self.viewDismissOnUserActionResult = true
             StoreLocatorButtonViewModel.companion.sendLocatorBackEvent()
             if let vc = presentingViewController {
                 dismiss(animated: true)
@@ -221,6 +246,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
             } else {
                 dismiss(animated: true)
             }
+            self.onSelectionCancelled()
         }
     }
     
@@ -251,6 +277,7 @@ extension MealzStoreLocatorWebView: WKScriptMessageHandler {
     }
 }
 
+@available(iOS 14.0, *)
 extension MealzStoreLocatorWebView {
     func passCoordsToWebView(latitude: String, longitude: String) {
         let jsCode = "searchBasedOnGeoLocation('\(latitude)', '\(longitude)');"
@@ -270,14 +297,21 @@ struct MealzWebViewSwiftUI: UIViewControllerRepresentable {
     
     var urlToLoad: URL
     var onSelectItem: (Any?) -> Void
+    var onSelectionCancelled: () -> Void
     
     let mealzView: MealzStoreLocatorWebView
-    init(urlToLoad: URL, onSelectItem: @escaping (Any?) -> Void) throws {
+    init(
+        urlToLoad: URL,
+        onSelectItem: @escaping (Any?) -> Void,
+        onSelectionCancelled: @escaping () -> Void
+    ) throws {
         self.urlToLoad = urlToLoad
         self.onSelectItem = onSelectItem
+        self.onSelectionCancelled = onSelectionCancelled
         mealzView = MealzStoreLocatorWebView(
             url: urlToLoad,
-            onSelectItem: onSelectItem
+            onSelectItem: onSelectItem,
+            onSelectionCancelled: onSelectionCancelled
         )
     }
     

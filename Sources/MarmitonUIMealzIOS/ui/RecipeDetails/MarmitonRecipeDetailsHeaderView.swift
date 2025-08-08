@@ -10,14 +10,24 @@ import MealziOSSDK
 
 @available(iOS 14, *)
 public struct MarmitonRecipeDetailsHeaderView: RecipeDetailsHeaderProtocol {
-    let changeStore: () -> Void
 
-    public init(changeStore: @escaping () -> Void) {
-        self.changeStore = changeStore
-    }
+    public init() {}
 
     public func content(params: RecipeDetailsHeaderParameters) -> some View {
         VStack {
+            // Navigation Header
+            Spacer().frame(height: 65) // Don't put something under floating header of recipes details
+
+            // Store Locator Button
+            MealzStoreLocatorButton().content(params: StoreLocatorButtonParameters(
+                selectedStore: params.selectedStore,
+                buttonPressed: false,
+                onButtonAction: {
+                    params.onChangeStore?()
+                }
+            ))
+
+            // Guests counter
             MarmitonCounter(
                 currentAmount: params.currentGuests,
                 backgroundColor: Color.clear,

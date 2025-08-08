@@ -111,7 +111,7 @@
         };
       }
     
-      function getByCoordinates(lng, lat, radius, selectedSuppliers) {
+      function getByCoordinates(lat, lng, radius, selectedSuppliers) {
           const getByCoordsRequest = new XMLHttpRequest();
           let url = `https://api.miam.tech/api/v1/point-of-sales/search?latitude=${lat}&longitude=${lng}&max_distance_km=${radius}&include=supplier&filter[affiliate]=true`;
           if (selectedSuppliers.length > 0) {
