@@ -1,3 +1,7 @@
+# 5.10.2
+[FIX] Recipe Details header position
+[FIX] Geolocation on store locator
+
 # 5.4.0
 [Fix] Fix store selector select same poi
 
