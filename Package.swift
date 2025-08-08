@@ -4,7 +4,7 @@
 import Foundation
 import PackageDescription
 
-let configurationMode = "dev"
+let configurationMode = "prod"
 
 let package = Package(
     name: "MarmitonUIMealzIOS",
