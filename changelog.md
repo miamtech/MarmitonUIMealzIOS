@@ -1,3 +1,6 @@
+# 5.10.1
+[FEA] Add ingredients to cart on recipe detail button click
+
 # 5.4.0
 [Fix] Fix store selector select same poi
 
