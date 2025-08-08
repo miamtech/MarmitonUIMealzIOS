@@ -1,13 +1,5 @@
 //
 //  MarmitonShowRecipeDetailsButtonView.swift
-//  MarmitonUIMealzIOS
-//
-//  Created by Maxime Pezeril on 08/08/2025.
-//
-
-
-//
-//  MarmitonShowRecipeDetailsButtonView.swift
 //
 //
 //  Created by Diarmuid McGonagle on 20/09/2024.
